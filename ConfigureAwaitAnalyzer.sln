@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigureAwaitAnalyzer", "ConfigureAwaitAnalyzer\ConfigureAwaitAnalyzer\ConfigureAwaitAnalyzer.csproj", "{5A9264FA-CB11-4ABB-BD6F-168BD540FD1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigureAwaitAnalyzer.Package", "ConfigureAwaitAnalyzer\ConfigureAwaitAnalyzer.Package\ConfigureAwaitAnalyzer.Package.csproj", "{B3BF47EB-F211-49A6-98E0-C90192D9A4F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigureAwaitAnalyzer.Test", "ConfigureAwaitAnalyzer\ConfigureAwaitAnalyzer.Test\ConfigureAwaitAnalyzer.Test.csproj", "{F3A2C880-A34B-4C29-A16C-F80D965D81C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigureAwaitAnalyzer.Vsix", "ConfigureAwaitAnalyzer\ConfigureAwaitAnalyzer.Vsix\ConfigureAwaitAnalyzer.Vsix.csproj", "{EFA43B90-C902-44A9-BCF1-5027B19884BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A9264FA-CB11-4ABB-BD6F-168BD540FD1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9264FA-CB11-4ABB-BD6F-168BD540FD1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9264FA-CB11-4ABB-BD6F-168BD540FD1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9264FA-CB11-4ABB-BD6F-168BD540FD1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3BF47EB-F211-49A6-98E0-C90192D9A4F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3BF47EB-F211-49A6-98E0-C90192D9A4F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3BF47EB-F211-49A6-98E0-C90192D9A4F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3BF47EB-F211-49A6-98E0-C90192D9A4F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A2C880-A34B-4C29-A16C-F80D965D81C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A2C880-A34B-4C29-A16C-F80D965D81C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A2C880-A34B-4C29-A16C-F80D965D81C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A2C880-A34B-4C29-A16C-F80D965D81C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFA43B90-C902-44A9-BCF1-5027B19884BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFA43B90-C902-44A9-BCF1-5027B19884BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFA43B90-C902-44A9-BCF1-5027B19884BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFA43B90-C902-44A9-BCF1-5027B19884BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27ED166A-CD1E-4ED6-98FB-DCD734B33F25}
+	EndGlobalSection
+EndGlobal
