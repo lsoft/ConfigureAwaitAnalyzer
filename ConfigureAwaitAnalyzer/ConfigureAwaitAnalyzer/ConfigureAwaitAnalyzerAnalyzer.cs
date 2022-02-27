@@ -76,26 +76,6 @@ namespace ConfigureAwaitAnalyzer
 
                 context.ReportDiagnostic(Diagnostic.Create(Rule, awaitExpression.GetLocation()));
             }
-            //if (symbol is IMethodSymbol methodSymbol)
-            //{
-            //    if (!methodSymbol.ReturnsTask())
-            //    {
-            //        return;
-            //    }
-
-            //    context.ReportDiagnostic(Diagnostic.Create(Rule, awaitExpression.GetLocation()));
-            //}
-            //if (symbol is IPropertySymbol propertySymbol)
-            //{
-            //    if (!propertySymbol.ReturnsTask())
-            //    {
-            //        return;
-            //    }
-
-            //    context.ReportDiagnostic(Diagnostic.Create(Rule, awaitExpression.GetLocation()));
-            //}
-
-
         }
     }
 }

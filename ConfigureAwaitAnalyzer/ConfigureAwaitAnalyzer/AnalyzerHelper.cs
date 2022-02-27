@@ -30,13 +30,23 @@ namespace ConfigureAwaitAnalyzer
                 return false;
             }
 
-            if (propertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+            if (propertyType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
             {
-                return true;
+                if (propertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+                {
+                    return true;
+                }
             }
-            if (propertyType.BaseType != null && propertyType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+
+            if (propertyType.BaseType != null)
             {
-                return true;
+                if (propertyType.BaseType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
+                {
+                    if (propertyType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -51,13 +61,23 @@ namespace ConfigureAwaitAnalyzer
                 return false;
             }
 
-            if (returnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+            if (returnType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
             {
-                return true;
+                if (returnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+                {
+                    return true;
+                }
             }
-            if (returnType.BaseType != null && returnType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+
+            if (returnType.BaseType != null)
             {
-                return true;
+                if (returnType.BaseType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
+                {
+                    if (returnType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -71,15 +91,6 @@ namespace ConfigureAwaitAnalyzer
             {
                 return false;
             }
-
-            //if (returnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
-            //{
-            //    return true;
-            //}
-            //if (returnType.BaseType != null && returnType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
-            //{
-            //    return true;
-            //}
 
             return returnType?.Name == "ConfiguredTaskAwaitable";
         }
