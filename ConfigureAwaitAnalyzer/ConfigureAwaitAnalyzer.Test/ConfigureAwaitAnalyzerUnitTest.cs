@@ -11,6 +11,20 @@ namespace ConfigureAwaitAnalyzer.Test
         private const string CaHelper = @"
         public static class AwaitHelper
         {
+            public static ConfiguredValueTaskAwaitable<T> Cat<T>(
+                this ValueTask<T> task
+                )
+            {
+                return task.ConfigureAwait(true);
+            }
+
+            public static ConfiguredValueTaskAwaitable<T> Caf<T>(
+                this ValueTask<T> task
+                )
+            {
+                return task.ConfigureAwait(false);
+            }
+
             public static ConfiguredTaskAwaitable<T> Cat<T>(
                 this Task<T> task
                 )
@@ -521,6 +535,111 @@ namespace ConfigureAwaitAnalyzer.Test
 
             await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
         }
+
+
+        [TestMethod]
+        public async Task ValueMethodTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await GetTask()|}};
+            }}
+
+            public static ValueTask<int> GetTask()
+            {{
+                return new ValueTask<int>(0);
+            }}
+        }}
+
+{CaHelper}
+
+    }}";
+
+            var expected = VerifyCS.Diagnostic(ConfigureAwaitAnalyzerAnalyzer.DiagnosticId).WithLocation(0);
+            await VerifyCS.VerifyAnalyzerAsync(test, expected);
+        }
+
+        [TestMethod]
+        public async Task ValueMethodCafTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await GetTask().Caf()|}};
+            }}
+
+            public static ValueTask<int> GetTask()
+            {{
+                return new ValueTask<int>(0);
+            }}
+        }}
+
+{CaHelper}
+
+    }}";
+
+            await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
+        }
+
+        [TestMethod]
+        public async Task ValueMethodCatTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await GetTask().Cat()|}};
+            }}
+
+            public static ValueTask<int> GetTask()
+            {{
+                return new ValueTask<int>(0);
+            }}
+        }}
+
+{CaHelper}
+
+    }}";
+
+            await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
+        }
+
 
     }
 }

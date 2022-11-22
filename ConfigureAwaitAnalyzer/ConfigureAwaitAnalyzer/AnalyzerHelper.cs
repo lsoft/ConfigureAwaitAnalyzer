@@ -92,7 +92,10 @@ namespace ConfigureAwaitAnalyzer
                 return false;
             }
 
-            return returnType?.Name == "ConfiguredTaskAwaitable";
+            return
+                returnType?.Name == "ConfiguredTaskAwaitable"
+                || returnType?.Name == "ConfiguredValueTaskAwaitable"
+                ;
         }
 
         public static T TryGetSyntaxNode<T>(this SyntaxNodeAnalysisContext context) where T : SyntaxNode
