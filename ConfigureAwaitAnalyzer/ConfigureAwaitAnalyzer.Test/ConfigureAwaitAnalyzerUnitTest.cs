@@ -640,6 +640,36 @@ namespace ConfigureAwaitAnalyzer.Test
             await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
         }
 
+        [TestMethod]
+        public async Task TaskYieldTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                await Task.Yield();
+            }}
+
+        }}
+
+{CaHelper}
+
+    }}
+";
+
+            await VerifyCS.VerifyAnalyzerAsync(test);
+        }
 
     }
 }

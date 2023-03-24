@@ -92,9 +92,17 @@ namespace ConfigureAwaitAnalyzer
                 return false;
             }
 
+            if (returnType.ToDisplayString() == "System.Runtime.CompilerServices.YieldAwaitable")
+            {
+                //no need to guard
+                //await Task.Yield()
+                return true;
+            }
+
+
             return
-                returnType?.Name == "ConfiguredTaskAwaitable"
-                || returnType?.Name == "ConfiguredValueTaskAwaitable"
+                returnType.Name == "ConfiguredTaskAwaitable"
+                || returnType.Name == "ConfiguredValueTaskAwaitable"
                 ;
         }
 

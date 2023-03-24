@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>ConfigureAwaitAnalyzer</PackageId>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.0.3</PackageVersion>
     <Authors>ls</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/lsoft/ConfigureAwaitAnalyzer</PackageProjectUrl>
