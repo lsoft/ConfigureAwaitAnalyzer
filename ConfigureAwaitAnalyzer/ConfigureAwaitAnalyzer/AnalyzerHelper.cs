@@ -92,18 +92,21 @@ namespace ConfigureAwaitAnalyzer
                 return false;
             }
 
+            if (returnType.Name == "ConfiguredTaskAwaitable"
+                || returnType.Name == "ConfiguredValueTaskAwaitable"
+                )
+            {
+                return true;
+            }
+
             if (returnType.ToDisplayString() == "System.Runtime.CompilerServices.YieldAwaitable")
             {
-                //no need to guard
+                //no need to guard this clause:
                 //await Task.Yield()
                 return true;
             }
 
-
-            return
-                returnType.Name == "ConfiguredTaskAwaitable"
-                || returnType.Name == "ConfiguredValueTaskAwaitable"
-                ;
+            return false;
         }
 
         public static T TryGetSyntaxNode<T>(this SyntaxNodeAnalysisContext context) where T : SyntaxNode
