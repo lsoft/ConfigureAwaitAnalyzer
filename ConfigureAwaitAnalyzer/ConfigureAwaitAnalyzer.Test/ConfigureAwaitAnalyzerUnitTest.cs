@@ -671,5 +671,126 @@ namespace ConfigureAwaitAnalyzer.Test
             await VerifyCS.VerifyAnalyzerAsync(test);
         }
 
+        [TestMethod]
+        public async Task TaskSchedulerTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await TaskScheduler.Default|}};
+            }}
+        }}
+
+public static class TaskSchedulerAwaitHelper
+{{
+    public static TaskSchedulerAwaiter GetAwaiter(this TaskScheduler scheduler) => new TaskSchedulerAwaiter(scheduler);
+}}
+public readonly struct TaskSchedulerAwaiter : INotifyCompletion
+{{
+    public bool IsCompleted => true;
+    public TaskSchedulerAwaiter(TaskScheduler scheduler, bool alwaysYield = false) {{ }}
+    public void OnCompleted(Action continuation) {{ }}
+    public void GetResult() {{ }}
+}}
+
+
+{CaHelper}
+
+    }}
+";
+
+            await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
+        }
+
+        [TestMethod]
+        public async Task MarkedSuppressMethodTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await DoInternalAsync()|}};
+            }}
+
+            /// <summary>
+            /// blabla
+            /// </summary>
+            {ConfigureAwaitAnalyzerAnalyzer.SuppressComment}
+            public static async Task DoInternalAsync()
+            {{
+            }}
+        }}
+
+{CaHelper}
+
+    }}
+";
+
+            await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
+        }
+
+        [TestMethod]
+        public async Task MarkedSuppressPropertyTest()
+        {
+            var test = @$"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+
+    namespace ConsoleApplication1
+    {{
+        class Program
+        {{   
+            public static async Task DoAsync()
+            {{
+                {{|#0:await OtherClass.DoInternalAsync|}};
+            }}
+
+        }}
+
+        static class OtherClass
+        {{
+            /// <summary>
+            /// blabla
+            /// </summary>
+            {ConfigureAwaitAnalyzerAnalyzer.SuppressComment}
+            public static Task DoInternalAsync => Task.CompletedTask;
+        }}
+
+{CaHelper}
+
+    }}
+";
+
+            await VerifyCS.VerifyAnalyzerAsync(test, new DiagnosticResult[0]);
+        }
+
     }
 }

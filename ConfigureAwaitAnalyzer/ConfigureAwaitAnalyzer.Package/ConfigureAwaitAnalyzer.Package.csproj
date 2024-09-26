@@ -9,14 +9,14 @@
 
   <PropertyGroup>
     <PackageId>ConfigureAwaitAnalyzer</PackageId>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Authors>ls</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/lsoft/ConfigureAwaitAnalyzer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lsoft/ConfigureAwaitAnalyzer</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>This is an explicit ConfigureAwait analyzer. It will post a warning if no explicit `ConfigureAwait` in awaitable expression found.</Description>
-    <Copyright>(c) lsoft 2022</Copyright>
+    <Copyright>(c) lsoft 2024</Copyright>
     <PackageTags>ConfigureAwait, analyzers</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>

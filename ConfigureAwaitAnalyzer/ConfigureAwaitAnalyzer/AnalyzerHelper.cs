@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.Collections.Generic;
@@ -9,42 +10,72 @@ namespace ConfigureAwaitAnalyzer
 {
     internal static class AnalyzerHelper
     {
-        internal static bool ReturnsAwaitableTask(this IPropertySymbol propertySymbol)
+        internal static bool CheckIfPropertyOK(this IPropertySymbol propertySymbol)
+        {
+            if (CheckIfPropertyReturnsAwaitableTask(propertySymbol))
+            {
+                return true;
+            }
+            if (CheckIfSymbolSuppressed(propertySymbol))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool CheckIfPropertyReturnsAwaitableTask(IPropertySymbol propertySymbol)
         {
             var propertyType = propertySymbol.Type;
-
             if (propertyType == null)
             {
                 return false;
+            }
+
+            if (propertyType.Name.Contains("TaskScheduler")) //fast and dirty check for better performance and lesser allocations
+            {
+                var fqName = propertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                if (fqName == "global::System.Threading.Tasks.TaskScheduler") //awaiting TaskScheduler does not require ConfigureAwait of any sort
+                {
+                    return true;
+                }
             }
 
             return propertyType?.Name == "ConfiguredTaskAwaitable";
         }
 
-        internal static bool ReturnsTask(this IPropertySymbol propertySymbol)
+        internal static bool CheckIfMethodOK(this IMethodSymbol methodSymbol)
         {
-            var propertyType = propertySymbol.Type;
-
-            if (propertyType == null)
+            if (CheckIfMethodReturnsAwaitableTask(methodSymbol))
             {
-                return false;
+                return true;
+            }
+            if (CheckIfSymbolSuppressed(methodSymbol))
+            {
+                return true;
             }
 
-            if (propertyType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
-            {
-                if (propertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
-                {
-                    return true;
-                }
-            }
+            return false;
+        }
 
-            if (propertyType.BaseType != null)
+        
+
+        private static bool CheckIfSymbolSuppressed(ISymbol methodSymbol)
+        {
+            for (var dsri = 0; dsri < methodSymbol.DeclaringSyntaxReferences.Length; dsri++)
             {
-                if (propertyType.BaseType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
+                var dsr = methodSymbol.DeclaringSyntaxReferences[dsri];
+                var s = dsr.GetSyntax();
+                var leadingTrivia = s.GetLeadingTrivia();
+                foreach (var trivia in leadingTrivia)
                 {
-                    if (propertyType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
+                    if (trivia.IsKind(SyntaxKind.SingleLineCommentTrivia))
                     {
-                        return true;
+                        if (trivia.ToString() == ConfigureAwaitAnalyzerAnalyzer.SuppressComment)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
@@ -52,39 +83,9 @@ namespace ConfigureAwaitAnalyzer
             return false;
         }
 
-        internal static bool ReturnsTask(this IMethodSymbol methodSymbol)
+        private static bool CheckIfMethodReturnsAwaitableTask(IMethodSymbol methodSymbol)
         {
-            var returnType = methodSymbol.ReturnType;
-
-            if (returnType == null)
-            {
-                return false;
-            }
-
-            if (returnType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
-            {
-                if (returnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
-                {
-                    return true;
-                }
-            }
-
-            if (returnType.BaseType != null)
-            {
-                if (returnType.BaseType.Name.Contains("Task")) //fast and dirty check for better performace and lesser allocations
-                {
-                    if (returnType.BaseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == "global::System.Threading.Tasks.Task")
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        internal static bool ReturnsAwaitableTask(this IMethodSymbol methodSymbol)
-        {
+            //check if method is returning awaitable task
             var returnType = methodSymbol.ReturnType;
 
             if (returnType == null)
